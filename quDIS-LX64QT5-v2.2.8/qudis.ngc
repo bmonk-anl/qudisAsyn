@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: qudis.ngc,v 1.63 2022/01/13 15:40:49 trurl Exp $ -->
+
+<Panel Name="quDIS" Icon="meter.xpm" Product="0x02" >
+  <Widget Type="Box" Style="Flat"                                   X="0" Y="0">
+    <Widget Type="Box" Style="Flat"                                   X="0" Y="0" Align="Left" >
+      <Widget Type="Label"  Caption="Sample Time"                       X="0" Y="0" />
+      <Widget Type="AutoCombo" Address="0x771" Index="0"                X="1" Y="0" Unit="s" Prefix="u" Base="40" Min="0" Max="16"/>
+    </Widget>
+    <Widget Type="Box" Style="Flat"                                   X="1" Y="0" Align="Right" >
+      <Widget Type="Box" Style="Flat"                                   X="0" Y="0"  Condition="==(HwType,34560)">
+        <Widget Type="Label"  Address="0x090F" Display="Enum"             X="0" Y="0" Caption="No external clock:External clock locked"/>
+        <Widget Type="Led"    Address="0x090F"                            X="1" Y="0" Green="1" Red="0" DefaultColor="Red"/>
+      </Widget>
+      <Widget Type="Label"  Address="0x773" Display="Enum"              X="1" Y="0" Caption="Device Preparing:Device Ready:Preparation Failed"/>
+      <Widget Type="Led"    Address="0x773"                             X="2" Y="0" Green="1" Yellow="0" DefaultColor="Red"/>
+    </Widget>
+  </Widget>
+
+  <Widget Type="Tabs"                                X="0" Y="1" Height="20">
+
+    <Tab Name="Position">
+
+      <Widget Type="Box"                                                X="0" Y="1" Width="2" Height="10">
+        <Widget Type="Box" Style="Flat"                                   X="0" Y="0" Width="3">
+          <Widget Type="Label"  Caption="Relative Positions"                  X="0" Y="0" Align="Left" Font="+4" Condition="==(AngleOn,0)"/>
+          <Widget Type="Label"  Caption="Relative Position and Angles"        X="0" Y="0" Align="Left" Font="+4" Condition="!=(AngleOn,0)"/>
+
+          <Widget Type="Label"  Caption=""                                    X="1" Y="0"/>
+          <Widget Type="Button" Caption="Reset All"                           X="2" Y="0" Align="Right VCenter" Toggle="0" Address="0x60D" Index="3" WatchOnly="1"/>
+          <Macro Type="Repeater" Count="2">
+            <View Dgroup="12"  Channel="$??(Counter,2,4)$"                    X="3" Y="0" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" ">
+              <Plugin Type="Fork">
+                <Option Name="Target" Value="Pir_Writer_Union"/>
+                <Option Name="Index"  Value="$Counter$"/>
+              </Plugin>
+            </View>
+          </Macro>
+          <View Dgroup="12"  Channel="0"                                      X="4" Y="0" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" " Align="Right">
+            <Plugin Type="Union" Caption="Pir_Writer_Union">
+              <Option Name="Mode"            Value="Multiline"/>
+              <Option Name="ForcedDataMatch" Value="1"/>
+              <Option Name="Debug64Format"   Value="0"/>
+              <Option Name="Fix64Format"     Value="1"/>
+              <Option Name="MasterChannel"   Value="1"/>
+            </Plugin>
+            <Plugin Type="Sync Writer"   Caption="Rel Positions" Condition="MarkOn">
+              <Option Name="Decoding"      Value="Int48Fps" />
+              <Option Name="FloatAccuracy" Value="12"/>
+            </Plugin>
+          </View>
+        </Widget>
+
+        <Macro Type="Repeater" Count="3">
+          <Widget Type="Box" Style="Flat"  X="$Counter$" Y="1"> <!-- Axis box with all axis information (no plots)-->
+            <Widget Type="Box" X="0" Y="0" Style="Flat" Width="2"> <!-- Axis label, value and reset button -->
+              <Widget Type="Label"  Caption="Axis $+(1,Counter)$"              X="0" Y="0" Align="Left  VCenter" Font="+4" Condition="or(==(Counter,0),==(AngleOn,0))"/>
+              <Widget Type="Label"  Caption="Angle Axes 1, $+(1,Counter)$"     X="0" Y="0" Align="Left  VCenter" Font="+4" Condition="and(!=(Counter,0),!=(AngleOn,0))"/>
+              <View Dgroup="12"     Channel="$*(2,Counter)$"                   X="1" Y="0" Align="Left  VCenter" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" ">
+                <Plugin Type="Text Display">
+                  <Option Name="FontIncr" Value="4"/>
+                  <Option Name="Style"    Value="1"/>
+                </Plugin>
+              </View>
+              <Widget Type="Button" Caption="Reset"                            X="2" Y="0" Align="Right VCenter" Address="0x60D" Index="$Counter$" WatchOnly="1" Condition="==(AngleOn,0)"/>
+            </Widget> <!-- Axis label, value and reset button -->
+            <Widget Type="Box" X="0" Y="1" Style="Flat"> <!-- State box with all state information -->
+              <Widget Type="Box" X="0" Y="0" Style="Flat"> <!-- Valid Box -->
+                <Widget Type="Label" Caption="Valid" X="0" Y="0"/>
+                <Widget Type="Led"                   X="1" Y="0" Address="0x0775" Index="$+(1,Counter)$" Grey="0x00" Green="0x10" Yellow="0x20" Red="0x30" DefaultColor="Grey" Mask="0xF0" />
+              </Widget> <!-- Valid Box -->
+              <Widget Type="Box" X="1" Y="0" Style="Flat"
+                      Tip="In case of an error load state.ngc (by drag and drop to this window) for more information"
+              > <!-- Error box -->
+                <Widget Type="Label" Caption="Error" X="0" Y="0"/>
+                <Widget Type="Led"                   X="1" Y="0" Address="0x0775" Index="$+(1,Counter)$" Grey="0x00" Green="0x01" Yellow="0x02" Red="0x03" DefaultColor="Grey" Mask="0x0F"/>
+              </Widget> <!-- Error box -->
+              <Widget Type="Button" X="2" Y="0" Address="0x0952" Index="$+(Counter,1)$" Caption="Clear" Tip="Reset the error display"/>
+            </Widget> <!-- State box with all state information -->
+          </Widget> <!-- Axis box with all axis information (no plots)-->
+
+          <View Dgroup="12"        Channel="$*(2,Counter)$"               X="$Counter$" Y="2" Height="5" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" ">
+            <Plugin Type="Line Display 2"  Caption="Rel Pos $Counter$ Display">
+              <Option Name="DisplaySelectButtons" Value="0"/>
+              <Option Name="DisplayXRangeButtons" Value="0"/>
+              <Option Name="DisplayMultiButtons"  Value="$==(Counter,2)$"/>
+              <Option Name="StopMaster"           Value="Rel Pos 2 Display"/>
+              <Option Name="SynthIndex"           Value="1"/>
+              <Option Name="InitialXRange"        Value="10"/>
+              <Option Name="DisplayStatusLine"    Value="1"/>
+            </Plugin>
+          </View>
+        </Macro>
+      </Widget>
+
+<!--
+      <Widget Type="Box"                                              X="0" Y="11" Height="10" Width="2" Condition="Abs">
+        <Widget Type="Box" Style="Flat"                                   X="0" Y="0"  Width="3">
+          <Widget Type="Label" Caption="Absolute Positions"                   X="0" Y="0" Align="Left" Font="+4"/>
+          <Macro Type="Repeater" Count="2">
+            <View Dgroup="12"  Channel="$??(Counter,3,5)$"                    X="2" Y="0" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" ">
+              <Plugin Type="Fork">
+                <Option Name="Target" Value="Pia_Writer_Union"/>
+                <Option Name="Index"  Value="$Counter$"/>
+              </Plugin>
+            </View>
+          </Macro>
+          <View Dgroup="12"  Channel="1"                                      X="3" Y="0" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" " Align="Right">
+            <Plugin Type="Union" Caption="Pia_Writer_Union">
+              <Option Name="Mode"            Value="Multiline"/>
+              <Option Name="ForcedDataMatch" Value="1"/>
+              <Option Name="Debug64Format"   Value="0"/>
+              <Option Name="Fix64Format"     Value="1"/>
+              <Option Name="MasterChannel"   Value="1"/>
+            </Plugin>
+            <Plugin Type="Sync Writer"   Caption="Abs Positions" Condition="MarkOn">
+              <Option Name="Decoding"      Value="Int48Fps" />
+              <Option Name="FloatAccuracy" Value="12"/>
+            </Plugin>
+          </View>
+        </Widget>
+
+        <Macro Type="Repeater" Count="3">
+          <Widget Type="Box" Style="Flat"                                 X="$Counter$" Y="1">
+            <Widget Type="Label"  Caption="Axis $+(1,Counter)$"             X="0" Y="0" Align="Left VCenter" Height="2" Font="+4"/>
+            <View Dgroup="12"     Channel="$+(1,*(2,Counter))$"             X="1" Y="0" Align="Left VCenter" Height="2" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" ">
+              <Plugin Type="Text Display">
+                <Option Name="FontIncr" Value="4"/>
+                <Option Name="style"    Value="1"/>
+              </Plugin>
+            </View>
+          </Widget>
+
+          <View Dgroup="12"        Channel="$+(1,*(2,Counter))$"          X="$Counter$" Y="2" Height="5" ChannelSelector="Hide" TriggerSnapshotButtons="Hide" ChannelControls=" ">
+            <Plugin Type="Line Display 2"  Caption="Abs Pos $Counter$ Display">
+              <Option Name="DisplaySelectButtons" Value="0"/>
+              <Option Name="DisplayXRangeButtons" Value="0"/>
+              <Option Name="DisplayMultiButtons"  Value="$==(Counter,2)$"/>
+              <Option Name="StopMaster"           Value="Abs Pos 2 Display"/>
+              <Option Name="SynthIndex"           Value="1"/>
+              <Option Name="InitialXRange"        Value="10"/>
+              <Option Name="DisplayStatusLine"    Value="1"/>
+            </Plugin>
+          </View>
+        </Macro>
+      </Widget>
+-->
+    </Tab>
+
+
+    <Tab Name="Alignment">
+      <Widget Type="Box" Style="Flat"                X="0" Y="0" Height="2" Align="Top Left">
+        <Widget Type="Label"                           X="0" Y="0"/>
+        <Widget Type="Label" Caption="Alignment View"  X="0" Y="1" Width="2" Font="+4"/>
+        <Widget Type="Label"                           X="0" Y="2" Align="Left"/>
+        <Widget Type="Box" Style="Flat"                X="0" Y="3" Align="Bottom Left">
+          <Widget Type="Label" Caption="Axis"            X="0" Y="0" Align="Left"/>
+          <Widget Type="Combo" Address="0x31" Index="6"  X="1" Y="0" Choices="1=9:2=10:3=11">
+            <Connect Name="Copy-1"   Address="0x77D"/>
+          </Widget>
+        </Widget>
+      </Widget>
+      <Widget Type="Box" Style="Flat"                X="1" Y="1" Align="Bottom">
+		    <Dialog Caption="    Working Range    "        X="0" Y="0" Modal="0" Popup="Button">
+          <Widget Type="Box" Style="Flat"                X="0" Y="0" Align="Top Left">
+            <Widget Type="Label" Caption="Working Range "  X="0" Y="0" Font="+4" Align="Left"/>
+            <Widget Type="Label"                           X="0" Y="1" Align="Left"
+                    Caption="Single pass lengths."/>
+            <Widget Type="Label"                           X="0" Y="2" Align="Left"
+                    Caption="For dual pass reflection divide distance and speed by 2."/>
+            <Widget Type="Label"                           X="0" Y="3" Align="Left"
+                    Caption="The blue triangle alters device settings, brown lines represent calculated information."/>
+          </Widget>
+          <Widget Type="Box" Style="Flat"                X="0" Y="1" Height="5">
+            <Widget Type="PiaWidget"                       X="0" Y="0" Height="5">
+              <Connect Name="WorkRange"   Address="0x7C8"/>
+              <Connect Name="LaserIntens" Address="0x7D9"/>
+              <Connect Name="XLimMin"     Address="0x7CC"/>
+              <Connect Name="XLimMax"     Address="0x7CD"/>
+              <Connect Name="XLimRatio"   Address="0x7CE"/>
+              <Connect Name="VMax"        Address="0x7CF"/>
+            </Widget>
+          </Widget>
+          <Widget Type="Box" Caption="Operating Point Approach"     X="0" Y="6">
+            <Widget Type="Progress"      Address="0x90A"   X="0" Y="0" Width="10" MaxVal="100"/>
+            <Widget Type="Led"           Address="0x773"   X="10" Y="0" Green="1" Yellow="0" DefaultColor="Red"/>
+          </Widget>
+        </Dialog>
+      </Widget>
+      <Widget Type="Box" Style="Flat"                X="2" Y="1" Width="2" Align="Right">
+        <Widget Type="Label" Caption=""                X="0" Y="0"/>
+        <Widget Type="Label" Caption="Reflection"      X="0" Y="2" Align="Right"/>
+        <Widget Type="Label" Caption="Preamp Gain"     X="0" Y="3" Align="Right"/>
+<!--
+        <Widget Type="Label" Caption="Amplitude"       X="0" Y="3" Align="Right"/>
+        <Widget Type="Label" Caption="Contrast"        X="0" Y="4" Align="Right"/>
+-->
+        <Macro  Type="Repeater" Count="3">
+          <Widget Type="Label"                           X="$+(1,Counter)$" Y="1" Align="Left" Caption="Axis $+(1,Counter)$"/>
+          <Widget Type="Combo"                           X="$+(1,Counter)$" Y="2" Address="0x667" Index="$Counter$" Choices="Single Pass=0:Dual Pass=1"/>
+          <Widget Type="Xedit"                           X="$+(1,Counter)$" Y="3" Address="0x7D6" Index="$Counter$" Unit="%" Prefix="X" Min="30" Max="1000"/>
+<!--
+          <Widget Type="Xedit"                           X="$+(1,Counter)$" Y="3" Address="0x7D4" Index="$Counter$" Unit="%" Prefix="X" Scale="305.18" Accuracy="2" ReadOnly="1"/>
+          <Widget Type="Xedit"                           X="$+(1,Counter)$" Y="4" Address="0x7D5" Index="$Counter$" Unit="%" Prefix="X" ReadOnly="1"/>
+-->
+        </Macro>
+      </Widget>
+
+      <View Caption="AlignView" Channel="6"          X="0" Y="3" Width="4" Height="10" ChannelSelector="Hide" TriggerSnapshotButtons="Hide">
+        <Plugin Caption="AlignDisplay" Type="Line Display 2">
+          <Option Name="DisplaySelectButtons" Value="0"/>
+          <Option Name="DisplayXRangeButtons" Value="0"/>
+          <Option Name="VerticalLines"        Value="11.37e-6 19.37e-6"/> <!--"24.14e-6 32.14e-6"-->
+        </Plugin>
+      </View>
+    </Tab>
+
+
+    <Tab Name="Interfaces">
+      <Widget Type="Box" Style="Flat"                X="0" Y="0" Align="Top Left">
+        <Widget Type="Label"                           X="0" Y="0"/>
+        <Widget Type="Label" Caption="Interface Settings" X="0" Y="1" Width="2" Font="+4"/>
+        <Widget Type="Label"                           X="0" Y="2"/>
+      </Widget>
+      <Widget Type="Box"      Style="Flat"                          X="0" Y="1" Height="15" Align="Top Left" >
+        <Widget Type="Box" Caption="Ethernet"                         X="0" Y="0" Width="3">
+          <Widget Type="Label"  Caption="MAC High Word"                 X="0" Y="0" Align="Left"/>
+          <Widget Type="Label"  Caption="MAC Low Word"                  X="0" Y="1" Align="Left"/>
+          <Widget Type="Edit"                                           X="1" Y="0" Address="0x18A" Display="Hex" ReadOnly="1"/>
+          <Widget Type="Edit"                                           X="1" Y="1" Address="0x189" Display="Hex" ReadOnly="1"/>
+          <Widget Type="Label"  Caption="   "                           X="3" Y="0" />
+          <Widget Type="Label"  Caption="IP Address"                    X="4" Y="0" Align="Left"/>
+          <Widget Type="Label"  Caption="Subnet Mask"                   X="4" Y="1" Align="Left"/>
+          <Widget Type="Label"  Caption="Gateway"                       X="4" Y="2" Align="Left"/>
+          <Widget Type="Edit"                                           X="5" Y="0" Address="0x186" Display="IpAddr"/>
+          <Widget Type="Edit"                                           X="5" Y="1" Address="0x187" Display="IpAddr"/>
+          <Widget Type="Edit"                                           X="5" Y="2" Address="0x188" Display="IpAddr"/>
+        </Widget>
+        <Macro Type="Repeater" Count="3">
+          <Widget Type="Box" Caption="Quadrature Axis $+(Counter,1)$" X="$Counter$" Y="1">
+            <Widget Type="Label"  Caption="Enable"                      X="0" Y="0" Align="Left" />
+            <Widget Type="Check"  Address="0x702" Index="$Counter$"     X="1" Y="0" />
+            <Widget Type="Label"  Caption="Resolution"                  X="0" Y="1" Align="Left" />
+            <Widget Type="Xedit"  Address="0x614" Index="$Counter$"     X="1" Y="1" Scale="1000." Unit="m" Prefix="n"  Min="0.001"  Max="1.e6" Condition="or(==(Counter,0),==(AngleOn,0))" />
+            <Widget Type="Xedit"  Address="0x614" Index="$Counter$"     X="1" Y="1" Scale="1000." Unit="°" Prefix="µ"  Min="0.001"  Max="1.e6" Condition="and(>(Counter,0),!=(AngleOn,0))" />
+            <Widget Type="Label"  Caption="Clock"                       X="0" Y="2" Align="Left" />
+            <Widget Type="Xedit"  Address="0x668" Index="$Counter$"     X="1" Y="2" Scale="0.05"  Unit="s" Prefix="n"  Min="40"     Max="1310700" />
+            <Widget Type="Label"  Caption="Average Time"                X="0" Y="3" Align="Left" />
+            <Widget Type="AutoCombo" Address="0x732" Index="$Counter$"  X="1" Y="3" Unit="s" Prefix="u" Base="40" Min="0" Max="15"/>
+            <Widget Type="Label"  Caption="Zero on reset"               X="0" Y="4" Align="Left Bottom" />
+            <Widget Type="Check"  Address="0x69B" Index="$Counter$"     X="1" Y="4" />
+            <Widget Type="Label"  Caption="Deviation checking"          X="0" Y="5" Align="Left Bottom" />
+            <Widget Type="Check"  Address="0x748" Index="$Counter$"     X="1" Y="5" />
+            <Widget Type="Label"  Caption="Tolerance Time"              X="0" Y="6" Align="Left" />
+            <Widget Type="Xedit"  Address="0x749" Index="$Counter$"     X="1" Y="6" Scale="0.05"  Unit="s" Prefix="n"  Min="20"     Max="1310700" />
+            <Widget Type="Label"  Caption="Tolerance"                   X="0" Y="7" Align="Left" />
+            <Widget Type="Xedit"  Address="0x74A" Index="$Counter$"     X="1" Y="7" Scale="1000." Unit="m" Prefix="n"  Min="0.001"  Max="1.e6" Condition="or(==(Counter,0),==(AngleOn,0))" />
+            <Widget Type="Xedit"  Address="0x74A" Index="$Counter$"     X="1" Y="7" Scale="1000." Unit="°" Prefix="µ"  Min="0.001"  Max="1.e6" Condition="and(>(Counter,0),!=(AngleOn,0))" />
+            <Widget Type="Label"  Caption="Status"                      X="0" Y="8" Align="Left" />
+            <Widget Type="Led"    Address="0x747" Index="$Counter$"     X="1" Y="8" Grey="0" Red="1"/>
+          </Widget>
+          <Widget Type="Box" Caption="HSSL Axis $+(Counter,1)$"       X="$Counter$" Y="2">
+            <Widget Type="Label"  Caption="Enable"                      X="0" Y="0" Align="Left" />
+            <Widget Type="Check"  Caption=""      Index="$Counter$"     X="1" Y="0" Address="0x701"/>
+            <Widget Type="Label"  Caption="Clock"                       X="0" Y="1" Align="Left" />
+            <Widget Type="Xedit"  Address="0x70D" Index="$Counter$"     X="1" Y="1" Max="2500" Min="40" Prefix="n" Scale="0.025" Unit="s" />
+            <Widget Type="Label"  Caption="Gap"                         X="0" Y="2" Align="Left" />
+            <Widget Type="Xedit"  Address="0x70E" Index="$Counter$"     X="1" Y="2" Max="63" Min="0" Prefix="X" Scale="1" Unit="" />
+            <Widget Type="Label"  Caption="Bits"                        X="0" Y="3" Align="Left" />
+            <Widget Type="Xedit"  Address="0x70A" Index="$Counter$"     X="1" Y="3" Min="8" Max="48" />
+            <Widget Type="Label"  Caption="Resolution"                  X="0" Y="4" Align="Left" />
+            <Widget Type="AutoCombo" Address="0x70B" Index="$Counter$"  X="1" Y="4" Unit="m" Prefix="p" Base="1" Min="0" Max="40" />
+            <Widget Type="Label"  Caption="Average"                     X="0" Y="5" Align="Left" />
+            <Widget Type="AutoCombo" Address="0x733" Index="$Counter$"  X="1" Y="5" Unit="s" Prefix="u" Base="40" Min="0" Max="15"/>
+            <Widget Type="Label"  Caption="Use LVDS"                    X="0" Y="6" Align="Left" />
+            <Widget Type="Check"  Address="0x74B"  Index="$Counter$"    X="1" Y="6" Align="Left" />
+          </Widget>
+        </Macro>
+        <Widget Type="Box" Caption="Angle Measurement"                X="0" Y="3">
+          <Widget Type="Label"  Caption="Enable"                        X="0" Y="0" Align="Left"/>
+          <Widget Type="Check"  Address="0x0708" Index="0"              X="1" Y="0" />
+          <Widget Type="Label"  Caption="Distance 1-2"                  X="0" Y="1" Align="Left"/>
+          <Widget Type="Label"  Caption="Distance 1-3"                  X="0" Y="2" Align="Left"/>
+          <Widget Type="Xedit"  Address="0x706" Index="0"               X="1" Y="1" Scale="1." Unit="m" Prefix="µ" />
+          <Widget Type="Xedit"  Address="0x707" Index="0"               X="1" Y="2" Scale="1." Unit="m" Prefix="µ" />
+        </Widget>
+        <Widget Type="Box" Caption="Pilot Laser"                       X="0" Y="4" Condition="Pilot">
+          <Widget Type="Check"  Caption="Axis1"                         X="0" Y="0" Align="Left" Address="0x7EA" Index="0"/>
+          <Widget Type="Check"  Caption="Axis2"                         X="1" Y="0" Align="Left" Address="0x7EA" Index="1"/>
+          <Widget Type="Check"  Caption="Axis3"                         X="2" Y="0" Align="Left" Address="0x7EA" Index="2"/>
+        </Widget>
+
+        <Widget Type="Box" Caption="External Inputs"                       X="1" Y="3" Align="Left" Condition="==(HwType,34560)">
+          <Widget Type="Box" Style="Flat"                                   X="0" Y="0">
+            <Widget Type="Label"  Address="0x090F" Display="Enum"             X="0" Y="0" Caption="No external clock:External clock locked"/>
+            <Widget Type="Led"    Address="0x090F"                            X="1" Y="0" Green="1" Red="0" DefaultColor="Red"/>
+          </Widget>
+          <Widget Type="Check"  Caption="Gate"                            X="0" Y="1" Align="Left" Address="0x0950" Index="0"/>
+          <Widget Type="Check"  Caption="Trigger"                         X="0" Y="2" Align="Left" Address="0x0951" Index="0"/>
+        </Widget>
+<!--
+        <Widget Type="Box" Caption="Marker"                           X="0" Y="3">
+          <Widget Type="Check"  Caption="Enable"                        X="0" Y="0" Address="0x7EB"/>
+          <Widget Type="Button"  Caption="Reset"                        X="1" Y="0" Address="0x7EC"/>
+          <Widget Type="Label"  Caption="Reset Timeout"                 X="0" Y="1" Align="Left" />
+          <Widget Type="Xedit"                                          X="1" Y="1" Address="0x7ED" Unit="s" Prefix="m" Min="0" Max="30"/>
+        </Widget>
+-->
+      </Widget>
+    </Tab>
+
+    <Tab Name="AMU Sensor" Condition="!=(ECU,0)">
+        <Widget Type="Box" Style="Flat"                                 X="0" Y="0" Align="Top Left" >
+        <Widget Type="Label"  Caption="Connected"                       X="0" Y="0" Alignment="Left" />
+        <Widget Type="Led"    Address="0x71B" Index="0"                 X="1" Y="0" Align="Left" DefaultColor="Red" Green="1" />
+
+        <Widget Type="Label"  Caption="Used for correction"             X="1" Y="1" Alignment="Left" />
+        <Widget Type="Label"  Caption="Measured"                        X="2" Y="1" Alignment="Left" />
+        <Widget Type="Label"  Caption="freeze"                          X="3" Y="1" Alignment="Left" />
+
+        <Widget Type="Label"  Caption="Temperature"                     X="0" Y="2" Alignment="Left" />
+        <Widget Type="Label"  Caption="Air Pressure"                    X="0" Y="3" Alignment="Left" />
+        <Widget Type="Label"  Caption="Relative Humidity"               X="0" Y="4" Alignment="Left" />
+
+        <Widget Type="Xedit"  Address="0x713" Index="0"                 X="1" Y="2" Unit="°C"  Prefix="X" Scale="1000" Accuracy="5" ReadOnly="1"/>
+        <Widget Type="Xedit"  Address="0x714" Index="0"                 X="1" Y="3" Unit="Pa" Prefix=" "              Accuracy="5" ReadOnly="1"/>
+        <Widget Type="Xedit"  Address="0x715" Index="0"                 X="1" Y="4" Unit="%"   Prefix="X" Scale="1000" Accuracy="5" ReadOnly="1"/>
+        <Widget Type="Xedit"  Address="0x721" Index="0"                 X="2" Y="2" Unit="°C"  Prefix="X" Scale="1000" Accuracy="5" ReadOnly="1"/>
+        <Widget Type="Xedit"  Address="0x722" Index="0"                 X="2" Y="3" Unit="Pa" Prefix=" "              Accuracy="5" ReadOnly="1"/>
+        <Widget Type="Xedit"  Address="0x723" Index="0"                 X="2" Y="4" Unit="%"   Prefix="X" Scale="1000" Accuracy="5" ReadOnly="1"/>
+        <Widget Type="Check"  Address="0x724" Index="0"                 X="3" Y="2" />
+        <Widget Type="Check"  Address="0x725" Index="0"                 X="3" Y="3" />
+        <Widget Type="Check"  Address="0x726" Index="0"                 X="3" Y="4" />
+
+        <Widget Type="Label"  Caption="Index of Refraction"             X="0" Y="5" Alignment="Left" />
+        <Widget Type="Xedit"  Address="0x71C" Index="0"                 X="1" Y="5" Unit=""   Prefix="X" Scale="1073741824" Offset="1" Accuracy="10" ReadOnly="1"/>
+
+		<Widget Type="Label"  Caption="AMU Correction mode"             X="0" Y="7" Alignment="Left" />
+        <Macro Type="Repeater" Count="3" >
+          <Widget Type="Label"  Caption="Axis $+(Counter,1)$"             X="$+(Counter,1)$" Y="6" Alignment="Left" />
+          <Widget Type="Combo"  Address="0x716" Index="$Counter$"         X="$+(1,Counter)$" Y="7"  Choices="No Correction=0:AMU=3"/>
+        </Macro>
+      </Widget>
+    </Tab>
+  </Widget>
+</Panel>

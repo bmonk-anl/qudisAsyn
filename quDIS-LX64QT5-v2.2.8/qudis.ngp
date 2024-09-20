@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profile X="0" Y="0" AppMode="0xFF" >
+  <Panel File="qudis.ngc"/>
+  <Persistence>
+
+  <Persist Addr="0x031" Index="0" Value="1"/>
+  <Persist Addr="0x03B" Index="0" Value="12"/>
+  <Persist Addr="0x032" Index="0" Value="1" />
+  <Persist Addr="0x035" Index="0" Value="0" />
+
+  <Persist Addr="0x031" Index="1" Value="2"/>
+  <Persist Addr="0x03B" Index="1" Value="12"/>
+  <Persist Addr="0x032" Index="1" Value="1" />
+  <Persist Addr="0x035" Index="1" Value="0" />
+
+  <Persist Addr="0x031" Index="2" Value="3"/>
+  <Persist Addr="0x03B" Index="2" Value="12"/>
+  <Persist Addr="0x032" Index="2" Value="1" />
+  <Persist Addr="0x035" Index="2" Value="0" />
+
+  <Persist Addr="0x031" Index="3" Value="4"/>
+  <Persist Addr="0x03B" Index="3" Value="12"/>
+  <Persist Addr="0x032" Index="3" Value="1" />
+  <Persist Addr="0x035" Index="3" Value="0" />
+
+  <Persist Addr="0x031" Index="4" Value="5"/>
+  <Persist Addr="0x03B" Index="4" Value="12"/>
+  <Persist Addr="0x032" Index="4" Value="1" />
+  <Persist Addr="0x035" Index="4" Value="0" />
+
+  <Persist Addr="0x031" Index="5" Value="6"/>
+  <Persist Addr="0x03B" Index="5" Value="12"/>
+  <Persist Addr="0x032" Index="5" Value="1" />
+  <Persist Addr="0x035" Index="5" Value="0" />
+
+  <Persist Addr="0x031" Index="6" Value="9" />  <!-- alignment view -->
+  <Persist Addr="0x03B" Index="6" Value="14"/>
+  <Persist Addr="0x032" Index="6" Value="1" />
+  <Persist Addr="0x035" Index="6" Value="0" />
+
+  <Persist Addr="0x770" Index="0" Value="1" />  <!-- index reset -->
+  <Persist Addr="0x14A" Index="0" Value="0" />
+  </Persistence>
+</Profile>

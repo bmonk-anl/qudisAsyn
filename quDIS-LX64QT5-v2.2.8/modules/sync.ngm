@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <!-- Condition="UClkAv" -->
+
+  <Widget Type="Box" X= "0" Y="0" Caption="quDIS external synchronisation">
+
+    <Widget Type="Label" X="1" Y="0" Caption="! no device connected or external synchronisation feature for connected device not activated" Condition="$==(UClkAv,0)$"/>
+    <Widget Type="Box" X="0" Y="0" Style="Flat" Condition="$!=(UClkAv,0)$">
+      <Widget Type="Box" X="0" Y="0" Style="Flat" Width="5">
+        <!-- activate -->
+        <Widget Type="Led" X="0" Y="0" DefaultColor="Grey" Grey="0x0" Green="0x0001" DefaultColor="Grey" Mask="0x0001">
+          <TypesIf Type="Pget" Target="2,2,1"/>
+        </Widget>
+        <Widget Type="Label"  X="1" Y="0" Caption="Clock in" Alignment="Left" Tip="physical SMA port Clock In at device backside"/>
+        <Widget Type="Button" X="2" Y="0" Alignment="Top Left" Caption="activate" > <!--Condition="both checks good pget 2,2,1 mask 0x0002 and 0x0004"-->
+          <TypesIf Type="Cset" Target="2,2,1"/>
+        </Widget>
+        <Widget Type="Button" X="3" Y="0" Alignment="Top Left" Caption="deactivate" > <!--Condition="is active led green pget 2,2,1 mask 0x0001"-->
+          <TypesIf Type="Cset" Target="2,2,2"/>
+        </Widget>
+        <Widget Type="Label"  X="4" Y="0" Caption=" "/>
+        <!-- assumed freq -->
+        <Widget Type="Label"  X="2" Y="1" Caption="Assumed freqency:" Alignment="Center"/>
+        <Widget Type="Xedit"  X="3" Y="1" Address="0x0957" Alignment="Top Left" Prefix="X" Accuracy="4" Unit="MHz" Scale="1e6" ReadOnly="1"/>
+        <Widget Type="Box" X="4" Y="1" Style="Flat" Condition="$UClkAv$">
+          <Dialog Caption="Configure Clock"                  X="0" Y="0" Modal="0" Popup="Button">
+            <Widget Type="PllCtrl"                             X="0" Y="0" Width="2" Height="4" LockLed="0">
+              <Connect Name="DivR"   Address="0x811" />
+              <Connect Name="DivN"   Address="0x812" />
+              <Connect Name="DivK"   Address="0x813" />
+              <Connect Name="Freq"   Address="0x955" />
+            </Widget>
+          </Dialog>
+        </Widget>
+
+        <!-- measured freq -->
+        <Widget Type="Label"  X="2" Y="3" Caption="Measured frequency:"/>
+        <Widget Type="Xedit"  X="3" Y="3" Address="0x0956" Alignment="Top Left" Prefix="X" Accuracy="4" Unit="kHz" Scale="1e3" ReadOnly="1"/>
+
+        <!-- check assumed -->
+        <Widget Type="Label"  X="0" Y="4" Caption=" "/>
+        <Widget Type="Led"    X="1" Y="4" DefaultColor="Grey" Grey="0x0" Green="0x0004" Mask="0x0004" Align="Right">
+          <TypesIf Type="Pget" Target="2,2,1"/>
+        </Widget>
+        <Widget Type="Label"  X="2" Y="4" Caption="check: measured freqency is in range of assumed frequency +/- 1000 ppm" Alignment="Left" Tip="brief history via status.ngm" Width="3"/>
+        <!-- stable and locked -->
+        <Widget Type="Label"  X="0" Y="5" Caption=" "/>
+        <Widget Type="Led"    X="1" Y="5" DefaultColor="Grey" Grey="0x0" Green="0x0002" Mask="0x0002" Align="Right">
+          <TypesIf Type="Pget" Target="2,2,1"/>
+        </Widget>
+        <Widget Type="Label"  X="2" Y="5" Caption="check: Input is stable and locked" Alignment="Left" Tip="brief history via status.ngm"/>
+
+        <Widget Type="Label"  X="2" Y="6" Caption=" "/>
+
+        <!-- clock out -->
+        <Widget Type="Led"    X="0" Y="7" DefaultColor="Grey" Grey="0x0" Green="0x0008" Mask="0x0008">
+          <TypesIf Type="Pget" Target="2,2,1"/>
+        </Widget>
+        <Widget Type="Label"  X="1" Y="7" Caption="Clock out 10MHz" Alignment="Left" Tip="physical SMA port Clock Out at device backside"/>
+        <Widget Type="Button" X="2" Y="7" Alignment="Top Left" Caption="activate" >
+          <TypesIf Type="Cset" Target="2,2,6"/>
+        </Widget>
+        <Widget Type="Button" X="3" Y="7" Alignment="Top Left" Caption="deactivate" >
+          <TypesIf Type="Cset" Target="2,2,7"/>
+        </Widget>
+
+        <Widget Type="Label"  X="4" Y="7" Caption=" "/>
+
+        <Widget Type="Label"  X="2" Y="8" Caption=" " Alignment="Left"/>
+
+        <Widget Type="Led"    X="0" Y="9" DefaultColor="Grey" Grey="0x0000" Green="0x0010" Mask="0x0010">
+          <TypesIf Type="Pget" Target="2,2,1"/>
+        </Widget>
+        <Widget Type="Label"  X="1" Y="9" Caption="Wait for Start Trigger" Alignment="Left" Tip="no position output if waiting"/>
+        <Widget Type="Button" X="3" Y="9" Caption="wait for trig">
+          <TypesIf Type="Cset" Target="2,2,5"/>
+        </Widget>
+        <Widget Type="Check"  X="4" Y="9" Caption="hold wait" Tip="trigger will be ignored">
+          <TypesIf Type="Pset" Target="2,2,7"/>
+        </Widget>
+
+        <!-- trigger in -->
+        <Widget Type="Label"  X="1" Y="10" Caption="Trigger in" Alignment="Left" Tip="physical at device backside"/>
+        <Widget Type="Button" X="2" Y="10" Caption="emulate one">
+          <TypesIf Type="Cset" Target="2,2,4"/>
+        </Widget>
+        <Widget Type="Label"  X="3" Y="10" Caption="Set sweep offset to trigger input:" Tip="negative values corrospond to earlier data aquisition" Alignment="Left"/>
+        <Widget Type="Xedit"  X="4" Y="10" Alignment="Top Left" Prefix="X" Accuracy="4" Unit="*20ns" Scale="1">
+          <TypesIf Type="Pset" Target="2,2,11"/>
+        </Widget>
+
+        <!-- trigger out -->
+        <Widget Type="Label"  X="1" Y="11" Caption="Trigger out" Alignment="Left" Tip="physical at device backside"/>
+        <Widget Type="Button" X="2" Y="11" Caption="out once" Tip="output trigger within next position aquisition time">
+          <TypesIf Type="Cset" Target="2,2,8"/>
+        </Widget>
+        <Widget Type="Check"  X="4" Y="11" Caption="sync out every sweep" Tip="">
+          <TypesIf Type="Pset" Target="2,2,3"/>
+        </Widget>
+
+      </Widget>
+      <Widget Type="Label"  X="0" Y="1" Caption=" " Alignment="Top Left"/>
+      <Widget Type="Label"  X="0" Y="2" Caption=" " Alignment="Top Left"/>
+      <Widget Type="Label"  X="0" Y="3" Caption=" " Alignment="Top Left"/>
+      <Widget Type="Label"  X="0" Y="4" Caption=" " Alignment="Top Left"/>
+    </Widget>
+
+  </Widget> <!-- external synchronisation -->
+</Module>

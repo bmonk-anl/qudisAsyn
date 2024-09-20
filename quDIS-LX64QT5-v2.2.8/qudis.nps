@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- N-Hands Product Spec for quDIS -->
+<!-- $Id: qudis.nps,v 1.47 2022/01/11 17:53:59 trurl Exp $ -->
+<Productspec Code="0x02" Caption="quDIS">
+
+  <!-- Controller Properties -->
+  <Controller DataChannels="10" Interfaces="Usb Usb3 Tcp">
+    <Variant Code="0x8500" Caption="quDIS R10" Path=".">
+      <File Target="Core FPGA" Name="qudis_core.bit"      AddrFlash="0x176" AddrVer="0x117" AddrPrd="0x118"/>
+      <File Target="Appl FPGA" Name="qudis_appl.bit"      AddrFlash="0x172" AddrVer="0x119" AddrPrd="0x11A"/>
+      <File Target="DSP"       Name="qudis_dsp.ldr"       AddrFlash="0x171" AddrVer="0x111" AddrPrd="0x112"/>
+    </Variant>
+    <Variant Code="0x8800" Caption="quDIS R10 HW V3" Path=".">
+      <File Target="Core FPGA" Name="qudis_core.bit"      AddrFlash="0x176" AddrVer="0x117" AddrPrd="0x118"/>
+      <File Target="Appl FPGA" Name="qudis_appl.bit"      AddrFlash="0x172" AddrVer="0x119" AddrPrd="0x11A"/>
+      <File Target="DSP"       Name="qudis_dsp.ldr"       AddrFlash="0x171" AddrVer="0x111" AddrPrd="0x112"/>
+    </Variant>
+  </Controller>
+
+
+  <!-- Server & Booting -->
+  <Server Name="daisysrv" Port="7800"/>
+
+  <!-- Data Channels & Groups -->
+  <Data>
+    <Signals>
+      <Signal  Id="1"  Name="Rel Distance Ax1"  Type="38"/>
+      <Signal  Id="3"  Name="Rel Distance Ax2"  Type="38"/>
+      <Signal  Id="5"  Name="Rel Distance Ax3"  Type="38"/>
+      <Signal  Id="9"  Name="Interferogram Ax1" Type="1"/>
+      <Signal  Id="10" Name="Interferogram Ax2" Type="1"/>
+      <Signal  Id="11" Name="Interferogram Ax3" Type="1"/>
+    </Signals>
+    <Triggers>
+      <Trigger Id="0"  Name="Disabled"        Type="0"/>
+      <Trigger Id="1"  Name="Time"            Type="2"/>
+      <Trigger Id="2"  Name="Every"           Type="5"/>
+      <Trigger Id="3"  Name="FFT Spec"        Type="4"/>
+      <Trigger Id="4"  Name="ADC Recorder"    Type="0"/>
+      <Trigger Id="5"  Name="Sweep"           Type="4"/>
+      <Trigger Id="6"  Name="SweepUp"         Type="4"/>
+    </Triggers>
+    <Groups>
+      <Group Id="0"  Name="Disabled"     Abbrev="DIS" Trigger="0" ChannelDescr="Name"  Formats=""
+             Properties="HidePage"                          />
+      <Group Id="7"  Name="Time"         Abbrev="LN"   Trigger="1" ChannelDescr="Name"  Formats=""
+             Properties="StoreContinous StoreLocal StoreRetrigger ShowSource ShowAverage ShowSampleTime ShowStream"/>
+      <Group Id="12" Name="Pos"          Abbrev="Pos"  Trigger="2" ChannelDescr="Name"  Formats=""
+             Properties="StoreContinous StoreLocal StoreRetrigger ShowStream"/>
+      <Group Id="13" Name="ADC Recorder" Abbrev="ADR"  Trigger="4" ChannelDescr="Name"  Formats=""
+             Properties="StoreLocal StoreRetrigger"/>
+      <Group Id="14" Name="Sweep"        Abbrev="SW"   Trigger="5" ChannelDescr="Name"  Formats=""
+             Properties="StoreLocal StoreRetrigger"/>
+      <Group Id="15" Name="FFT Spec"     Abbrev="FFT"  Trigger="3" ChannelDescr="Name"  Formats=""
+             Properties="StoreLocal StoreRetrigger"/>
+      <Group Id="16" Name="SweepUp"      Abbrev="SwUp" Trigger="6" ChannelDescr="Name"  Formats=""
+             Properties="StoreLocal StoreRetrigger"/>
+    </Groups>
+    <SoftChannels Count="6"/>
+  </Data>
+
+  <!-- GUI settings -->
+  <GuiSettings AutoLoad="qudis.ngp"
+               MultiDevice="1"/>
+
+  <!-- String Constants -->
+  <Strings>
+  </Strings>
+
+  <Conditions>
+    <Condition Name="HwType"   Address="0x0167" Index="0" Default="0"/>
+    <Condition Name="Abs"      Address="0x0751" Index="0" Default="0"/>
+    <Condition Name="Merge"    Address="0x0755" Index="0" Default="0"/>
+    <Condition Name="Pilot"    Address="0x0757" Index="0" Default="0"/>
+    <Condition Name="AngleOn"  Address="0x0708" Index="0" Default="0"/>
+    <Condition Name="MarkOn"   Address="0x07EB" Index="0" Default="0"/>
+    <Condition Name="ECU"      Address="0x0717" Index="0" Default="0"/>
+    <Condition Name="EcuConn"  Address="0x071B" Index="0" Default="0"/>
+    <Condition Name="UClkAv"   Address="0x0851" Index="0" Default="0"/>
+  </Conditions>
+
+</Productspec>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <Widget Type="Box" Caption="quDIS stati">
+    <Widget Type="Box" X="0" Y="0" >
+      <Widget Type="Box" X="0" Y="0" Style="Flat" Width="5">
+        <Widget Type="Label"  X="0" Y="0" Caption="Device" Alignment="Center" Tip="Entity"/>
+        <Widget Type="Led"    X="1" Y="0" Address="0x0775" Index="0" Grey="0x00" Green="0x10" Yellow="0x20" Red="0x30" DefaultColor="Grey" Mask="0xF0" Tip="Valid"/>
+        <Widget Type="Label"  X="2" Y="0" Address="0x0774" Index="0" Alignment="Left" Display="Hex" Tip="Status code"/>
+        <Widget Type="Led"    X="3" Y="0" Address="0x0775" Index="0" Grey="0x00" Green="0x01" Yellow="0x02" Red="0x03" DefaultColor="Grey" Mask="0x0F" Tip="Status"/>
+        <Widget Type="Button" X="4" Y="0" Address="0x0952" Index="0" Caption="Clear" />
+      </Widget>
+      <Widget Type="Label"  X="0" Y="1" Address="0x0774" Index="0" Alignment="Left" Display="Enum" Width="5"
+              Caption="state!idle=0:Device not ready. (Re-)Initializing laser=1:Device ready=2:Clock changed=3:
+					   external clock unstable=4:external clock frequency deviation too high=5:initialization unfinished=6:logic error, please report FF=255"
+      />
+    </Widget>
+    <Macro Type="Repeater" Count="3">
+      <Widget Type="Box"    X="0" Y="$+(1,Counter)$" >
+        <Widget Type="Box"    X="0" Y="0" Style="Flat" Width="5">
+          <Widget Type="Label"  X="0" Y="0" Caption="Axis $+(1,Counter)$" Alignment="Center" Tip="Entity"/>
+          <Widget Type="Led"    X="1" Y="0" Address="0x0775" Index="$+(1,Counter)$" Grey="0x00" Green="0x10" Yellow="0x20" Red="0x30" DefaultColor="Grey" Mask="0xF0" Tip="Valid" />
+          <Widget Type="Label"  X="2" Y="0" Address="0x0774" Index="$+(1,Counter)$" Alignment="Left" Display="Hex" Tip="Status code"/>
+          <Widget Type="Led"    X="3" Y="0" Address="0x0775" Index="$+(1,Counter)$" Grey="0x00" Green="0x01" Yellow="0x02" Red="0x03" DefaultColor="Grey" Mask="0x0F" Tip="Status" />
+          <Widget Type="Button" X="4" Y="0" Address="0x0952" Index="$+(1,Counter)$" Caption="Clear" />
+        </Widget>
+        <Widget Type="Label"    X="0" Y="1" Address="0x0774" Index="$+(1,Counter)$" Alignment="Left" Width="5" Display="Enum"
+                Caption="state!idle=0:Device not ready=1:Low signal=2:Photodetector-ADC saturation high=3:Photodetector-ADC saturation low=4::Cavity length increased too fast=6:
+				Cavity length decreased too fast=7:Cavity length change out of speed limit=8:Missing initial reset=9:logic error, please report FF=255"
+        />
+        <Widget Type="Bitfield" X="0" Y="2" Address="0x0954" Index="$Counter$"
+                Bits="Ignore Low Signal=3"
+        />
+      </Widget>
+    </Macro>
+  </Widget> <!-- Global Box -->
+</Module>

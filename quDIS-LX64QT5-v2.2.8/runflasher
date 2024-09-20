@@ -1,0 +1,7 @@
+#!/bin/bash
+# Flasher starter
+
+DAISYPATH=$(dirname $0)
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DAISYPATH
+$DAISYPATH/nhflash "$@" &
+

@@ -1,0 +1,70 @@
+record(ai, "$(P)$(R)absPos1_RBV")
+{
+	field(DTYP, "asynFloat64")
+    	field(INP,  "@asyn($(PORT),$(ADDR))ABS_POS1_VALUE")
+    	field(LINR, "NO CONVERSION")
+	field(PREC, "2")
+	# field(EGU,  "V")
+    	field(SCAN, "I/O Intr")
+    	#field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)absPos2_RBV")
+{
+	field(DTYP, "asynFloat64")
+    	field(INP,  "@asyn($(PORT),$(ADDR))ABS_POS2_VALUE")
+    	field(LINR, "NO CONVERSION")
+	field(PREC, "2")
+	# field(EGU,  "V")
+    	field(SCAN, "I/O Intr")
+    	#field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)absPos3_RBV")
+{
+	field(DTYP, "asynFloat64")
+    	field(INP,  "@asyn($(PORT),$(ADDR))ABS_POS3_VALUE")
+    	field(LINR, "NO CONVERSION")
+	field(PREC, "2")
+	# field(EGU,  "V")
+    	field(SCAN, "I/O Intr")
+    	#field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)relPos1_RBV")
+{
+	field(DTYP, "asynFloat64")
+    	field(INP,  "@asyn($(PORT),$(ADDR))REL_POS1_VALUE")
+    	field(LINR, "NO CONVERSION")
+	field(PREC, "2")
+	# field(EGU,  "V")
+    	field(SCAN, "I/O Intr")
+    	#field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)relPos2_RBV")
+{
+	field(DTYP, "asynFloat64")
+    	field(INP,  "@asyn($(PORT),$(ADDR))REL_POS2_VALUE")
+    	field(LINR, "NO CONVERSION")
+	field(PREC, "2")
+	# field(EGU,  "V")
+    	field(SCAN, "I/O Intr")
+    	#field(SCAN, "Passive")
+}
+record(ai, "$(P)$(R)relPos3_RBV")
+{
+	field(DTYP, "asynFloat64")
+    	field(INP,  "@asyn($(PORT),$(ADDR))REL_POS3_VALUE")
+    	field(LINR, "NO CONVERSION")
+	field(PREC, "2")
+	# field(EGU,  "V")
+    	field(SCAN, "I/O Intr")
+    	#field(SCAN, "Passive")
+}
+ 
+# record(bo, "$(P)$(R)setPower")
+# {
+# 	field(DTYP, "asynInt32")
+# 	field(OUT,  "@asyn($(PORT),$(ADDR))SET_POWER")
+# 	field(ZNAM, "Off")
+# 	field(ONAM, "On")
+# 	field(VAL,  0)
+# }
+

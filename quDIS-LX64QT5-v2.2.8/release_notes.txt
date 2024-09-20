@@ -1,0 +1,195 @@
+quDIS Software Release Notes
+============================
+
+Version 2.2.8
+-------------
+ - Latency of HSSL / AquadB further reduced to reach about 10 microseconds.
+
+
+Version 2.2.7
+---------------------
+ - Allow synchronization output periodical with every sweep
+ - Reduced noise in relative position measurement
+ - Update to User manual
+ - Bugfix: Sweep synchronization with external trigger signal
+ - Bugfix: Latency of HSSL / AquadB reduced by 40 micro seconds
+
+Version 2.2.6
+-------------
+ - Update to user manual
+ - Bugfix: Drift in relative position introduced in v2.2.5
+ - Bugfix: Correction in time base of time averaging (display bug)
+
+Version 2.2.5
+-------------
+ - Start trigger output implemented
+ - Added latest manual
+ - Bugfix: Reduced jitter of start trigger input
+
+Version 2.2.4
+-------------
+- Support for external clock feature
+- Support for trigger synchronization.
+
+Version 2.2.3
+-------------
+- Library extension: Third method to acquire position data (buffer polling)
+
+Version 2.2.2
+-------------
+- Bugfix: Compatibility of dlls with new hardware
+
+Version 2.2.1
+-------------
+- Bugfix: Python compatibility of 32 bit library
+
+Version 2.2.0
+-------------
+- Support of new hardware
+
+Version 2.1.4
+-------------
+- Bugfix: Added missing files to userlib
+
+Version 2.1.3
+-------------
+- Bugfix: Problems in device preparation process
+
+Version 2.1.2
+-------------
+- DLL: Added pilot laser support
+- Pilot laser support in DLL & Labview
+
+Version 2.1.1
+-------------
+- Adjustable preamp gain for interferogram
+- Alignment display: mark range used for phase detection
+- DLL: estimateSignalQuality is broken - always return error
+
+Version 2.1.0
+-------------
+- New feature: ethernet support
+
+Version 2.0.8
+-------------
+- Bugfix: sporadic crash in DLL
+- Bugfix: Labview example didn't find devices
+
+Version 2.0.7
+-------------
+- nhflash: fixed sporadic errors for very large firmware files
+
+Version 2.0.6
+-------------
+- New feature: AMU support
+
+Version 2.0.5
+-------------
+- Bugfix for flasher problem
+
+Version 2.0.4
+-------------
+- Installation program
+- Improved noise reduction
+- Bugfix: nhflash sometimes reports error when flashing the appl bitfile
+- Bugfix in DLL: no valid position output
+- More stable laser wavelength control
+
+Version 2.0.3
+-------------
+- Removed signal quality heuristics
+
+Version 2.0.2
+-------------
+- Improved signal quality heuristics
+
+Version 2.0.1
+-------------
+- Removed some unnecessary files
+- Working range change progress bar
+
+Version 2.0.0
+-------------
+- Adjustable working range with automatic adaption
+
+Version 1.2.9
+-------------
+- New feature quadrature output
+- New feature marker input
+
+Version 1.2.8
+-------------
+- New feature HSSL output
+
+Version 1.2.7
+-------------
+- New feature angle measurement
+- Bugfix userlib: doesn't find devices
+
+Version 1.2.6h
+--------------
+- Pilot Laser Support
+- Current DAC PWM Support for higher resulution
+- Support for alternative laser type
+- Extended examples for direct device access
+
+Version 1.2.5h
+--------------
+- USB3 support; USB2 removed
+- Startup sequence now considers current for laser T adjustment
+- Adjustable Working range (by slider) - feature yet incomplete
+- Merge box enable flag made persistent
+- Bugfix: Selection of thermal expansion compensation mode fixed
+
+Version 1.2.0
+-------------
+- First release based on improved algorithm
+- Additional data displays for alignment diagnosis
+- Added "Merge Box" to fix short contact loss in rel. measurement
+
+Version 1.1.4
+-------------
+- Completed FFT, histogram, and speed panels
+
+Version 1.1.3
+-------------
+- Corrected minor design flaws
+
+Version 1.1.2
+-------------
+- Bugfix: Timing problem in boot sequence (only few devices are affected)
+
+Version 1.1.1
+-------------
+- Bugfix: Extended insufficient max. measurement distance
+- Bugfix: Suppressed possible oscillations in temperature control
+
+Version 1.1.0
+-------------
+- Support for new hardware revision (serial numbers J 02 xxxx)
+- Laser temperature control state in DLL & Labview
+
+Version 1.0.4
+-------------
+- Initial calibration of laser temperature control
+- Contrast measure recalibrated
+- Bugfix: "Reset all" didn't work on axis 1
+- Bugfix: Old curve not cleared in display when sampling very slowly
+
+Version 1.0.3
+-------------
+- Noise reduction at longer distances
+- Bugfix: Reset of relative positions affected always all axes
+- Added contrast measure in GUI & DLL (QDS_estimateSignalQuality)
+
+Version 1.0.2
+-------------
+- Bugfix: Sudden jumps in relative distance by 770nm
+
+Version 1.0.1
+-------------
+- Added alignment view
+
+Version 1.0.0
+-------------
+- First published version

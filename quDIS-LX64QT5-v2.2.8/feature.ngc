@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: feature.ngc,v 1.7 2022/01/11 17:53:59 trurl Exp $ -->
+<Panel Name="PIA Features" Icon="key16.xpm" Product="0x00000002" >
+
+  <Widget Type="Box" Style="Flat" X="0" Y="0" Align="Top Left" >
+    <Widget Type="Box" Caption="Device Info" X="0" Y="0" >
+      <Widget Type="Edit"   Caption=""                X="1" Y="0"  Width="2" Address="0x66F" Display="Serial"  ReadOnly="1" />
+      <Widget Type="Label"  Caption="Axes count"      X="0" Y="1"  Alignment="Left" />
+      <Widget Type="Label"  Caption="Absolute"        X="0" Y="2"  Alignment="Left" />
+      <Widget Type="Label"  Caption="Merge Box"       X="0" Y="3"  Alignment="Left" />
+      <Widget Type="Label"  Caption="AMU"             X="0" Y="4"  Alignment="Left"/>
+      <Widget Type="Label"  Caption="Ethernet"        X="0" Y="5"  Alignment="Left"/>
+      <Widget Type="Label"  Caption="User clock"      X="0" Y="6"  Alignment="Left"/>
+
+      <Widget Type="Edit"   Caption=""                X="1" Y="0"  Width="2" Address="0x066F" Display="Serial"  ReadOnly="1" />
+      <Widget Type="Xedit"  Caption=""                X="1" Y="1"  Width="2" Address="0x0753"                   ReadOnly="1" />
+      <Widget Type="Check"  Caption=""                X="1" Y="2"  Width="2" Address="0x0751"                   ReadOnly="1" />
+      <Widget Type="Check"  Caption=""                X="1" Y="3"  Width="2" Address="0x0755"                   ReadOnly="1" />
+      <Widget Type="Check"  Caption=""                X="1" Y="4"  Width="2" Address="0x0718"                   ReadOnly="1" />
+      <Widget Type="Check"  Caption=""                X="1" Y="5"  Width="2" Address="0x0759"                   ReadOnly="1" />
+      <Widget Type="Check"  Caption=""                X="1" Y="6"  Width="2" Address="0x0850"                   ReadOnly="1" />
+    </Widget>
+
+    <Widget Type="Box" Caption="Option Upgrade" X="0" Y="1" >
+      <Widget Type="Label"  Caption="Key"     X="0" Y="0" Alignment="Left" />
+      <Widget Type="Edit"   Caption=""        X="1" Y="0" Width="2" Address="0x18D" Display="Hex" />
+      <Widget Type="Label"  Caption="Enter the upgrade key, press enter and restart the device"     X="0" Y="1" Width="3" />
+    </Widget>
+  </Widget>
+
+</Panel>
